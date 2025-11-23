@@ -11,7 +11,24 @@ const fuelRoutes = require('./routes/fuellogs');
 const parkingRoutes = require('./routes/parking');
 
 const app = express();
-app.use(cors());
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:5173",
+  "http://127.0.0.1:3000",
+  "https://vocal-rabanadas-3b3af5.netlify.app"
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, Postman)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("CORS: Not allowed"));
+    }
+  },
+  credentials: true
+}));
 app.use(express.json());
 app.use(morgan('dev'));
 
